@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>CheckLabs</title>
+</head>
+<body>
+    
+    <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <div class="header__logo">  <img src="{% static 'images/favicon.png'%}">
+                    CheckLabs</div>
+            </div>
+        </div>
+    </header>
+    <div id="main" class="container-fluid" style="background: url('{% static 'images/background.png'%}') repeat;">
+        <div class="row">
+            <div id="workplace">
+                <h1 id="intro__title">Загрузить отчет по лабораторной работе</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div data-nosnippet>
+                        <div id="WorkPlaceHolder">
+                            <div id="UploadFile" >
+                                <div class="filedrop" id="filedrop-1">
+                                    <label>Выберите Word файлы</label>
+                                    <label class="filedrop-hint mt-1">Или перетащите Word файлы мышью</label>
+<!--                                    {{ form }}-->
+                                    <input type="file" name="uploadfileinput" class="uploadfileinput" id="uploadFileInput-1" title accept=".docx,.doc,.docm" multiple required="required" onchange="shownames()">
+                                </div>
+                                <p id="listOfFiles"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 id="intro__template">Задать параметры шаблона</h3>
+                    <div data-template>
+                        <div id="workplace_first">
+                            <select name="select_font" required="required">
+                                <option value="">Выберите шрифт</option><option value="Times New Roman">Times New Roman</option><option value="Calibri">Calibri</option><option value="Arial">Arial</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <select name="select_alignment" required="required">
+                                <option value="">Выберите тип выравнивания текста</option><option value="0">Выравнивание по левому краю</option><option value="1">Выравнивание по центру</option><option value="2">Выравнивание по правому краю</option><option value="3">Выравнивание по ширине</option>
+                            </select>
+                            <select name="select_interval" required="required">
+                                <option value="">Выберите интервал</option><option value="1.0">1,0</option><option value="1.15">1,15</option><option value="1.5">1,5</option>
+                                <option value="2.0">2,0</option><option value="2.5">2,5</option><option value="3.0">3,0</option>
+                            </select>
+                        </div>
+                        <div id="workplace_second">
+                            <div class="f_size">
+                            Введите размер шрифта
+                            <input type="number" name="select_font_size" required="required" min=1 max=72 value=14 step=1></div>
+                            <div class="ind_first">
+                            Введите значение отступа для первой строки
+                            <input type="number" name="indent_of_first_line" required="required" min=0 max=10 value=1.25 step=0.05></div>
+                            <div class="ind_left">
+                            Введите значение отступа слева
+                            <input type="number" name="indent_of_left"  min=0 max=10 value=0 step=0.05> </div>
+                            <div class="ind_right">
+                            Введите значение отступа справа
+                            <input type="number" name="indent_of_right"  min=0 max=10 value=0 step=0.05></div>
+                        </div>
+                        <button type="submit" value="sendProps" class="btnCheck">Проверить документы</button>
+                    </div>
+                    {% if file_url %}
+                        <p>Загрузить проверенные лабораторные:
+                        <a href="{{ file_url }}" style="font-size: 16px; font-weight: 600;"> {{ load_text }}</a></p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <h2>Проверить отчёт по лабораторной работе на соответствие шаблону</h2>
+        <p>Это средство для проверки отчётов по лабораторным работам</p>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="howtolist" id="howto">
+                <div class="howtosection">
+                    <div>
+                        <h2>Как проверить отчёт по лабораторной работе</h2>
+                        <ol>
+                            <li>Загрузите файлы DOCX, который вы хотите проверить</li>
+                            <li>Задайте параметры шаблона по которому будет проверен файл</li>
+                            <li>Нажмите кнопку "Проверить документ"</li>
+                            <li>Загрузите скачанный zip файл</li>
+                            <li>К частям текста не соответствующих шаблону будут прикреплены примечания с указанием ошибки</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        window.onload = function() {
+        document.getElementById("uploadFileInput-1").onchange = function(){
+            let list = 'Файлы: ';
+            var name = document.getElementById('uploadFileInput-1');
+            for (var i = 0; i <= name.files.length - 1; i++) {
+                var fname = name.files.item(i).name;
+                list = list + fname + ", ";
+            }
+            document.getElementById('listOfFiles').innerHTML = list.slice(0, -2);
+            };
+        };
+    </script>
+</body>
+</html>
